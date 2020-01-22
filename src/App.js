@@ -1,9 +1,6 @@
 import React from 'react';
 import {debounce} from 'lodash'
 
-
-
-
 import Searchbar from './Searchbar.js';
 import youtube from './apis/youtube';
 import Videolist from './Videolist.js';
@@ -24,6 +21,9 @@ class App extends React.Component {
         this.onFormSubmit('react.js');
     }
 
+    stateClear=()=> {
+        this.setState({suggestedResults:[]})
+    }
     onFormSubmit= async (term) => {
       const response= await youtube.get('/search', {
             params : {
@@ -31,6 +31,7 @@ class App extends React.Component {
             }
         })
         this.setState({videos:response.data.items,selectedVideo:response.data.items[0]});
+        
     }
 
     callApi=debounce((term)=> {
@@ -45,6 +46,7 @@ class App extends React.Component {
 
 
     
+    
 
     onvideoselect= (video) => {
         this.setState({selectedVideo : video})
@@ -56,10 +58,10 @@ class App extends React.Component {
 
             <div className='ui container'>
             <div className='logo'>
-            <img src={Logo} />
+            <img src={Logo} alt="logo" />
             
             </div>
-                 <Searchbar formsubmit={this.onFormSubmit} formChange={this.callApi}/>
+                 <Searchbar formsubmit={this.onFormSubmit} formChange={this.callApi} suggestedResults={this.state.suggestedResults} stateClear={this.stateClear}/>
                  
                  <div className='ui grid'>
                         <div className='ui row'>
